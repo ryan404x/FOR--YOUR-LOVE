@@ -6,32 +6,10 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&amp;family=Inter:wght@300;400;500&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&amp;family=Inter:wght@300;400&amp;display=swap" rel="stylesheet">
     
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        pinky: '#ff6ec7',
-                        purp: '#a855f7',
-                        bluey: '#60a5fa',
-                    },
-                    fontFamily: {
-                        cursive: ['"Great Vibes"', 'cursive'],
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    animation: {
-                        'float': 'float 6s ease-in-out infinite',
-                        'float-delayed': 'float 6s ease-in-out 3s infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    }
-                }
-            }
-        }
-    </script>
 
     <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -63,62 +41,28 @@
             30% { transform: scale(1); }
             45% { transform: scale(1.1); }
         }
-
-        .petal {
-            position: fixed;
-            top: -10%;
-            z-index: 40;
-            pointer-events: none;
-            animation: fall linear infinite;
-            color: #ff6ec7;
-            text-shadow: 0 0 10px rgba(255,110,199,0.5);
-        }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .text-glow {
-            text-shadow: 0 0 20px rgba(255, 110, 199, 0.6), 0 0 40px rgba(168, 85, 247, 0.4);
-        }
-        
-        /* Envelope 3D */
-        .envelope-wrapper { perspective: 1000px; }
-        .envelope-flap {
-            transform-origin: top;
-            transition: transform 1s ease-in-out;
-        }
-        .envelope-wrapper.open .envelope-flap {
-            transform: rotateX(180deg);
-            z-index: 0;
-        }
-        .envelope-wrapper.open .letter-paper {
-            transform: translateY(-80px);
-            transition: transform 1s ease-in-out 0.5s;
-        }
-
-        .cursor-none-interaction * { cursor: none !important; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans font-light selection:bg-pinky/30 selection:text-white overflow-x-hidden relative min-h-screen">
+<body class="bg-slate-950 text-slate-100 font-['Inter'] font-light selection:bg-[#ff6ec7]/30 selection:text-white overflow-x-hidden relative min-h-screen">
+
+    <!-- Logo -->
+    <div class="fixed top-6 left-6 z-50 mix-blend-screen pointer-events-none">
+        <span class="text-xs tracking-tighter text-white/50 uppercase font-light">B&amp;B</span>
+    </div>
 
     <!-- 3D Canvas Background -->
     <canvas id="bg-canvas" class="fixed inset-0 z-0 pointer-events-none"></canvas>
 
     <!-- Background Ambient Glows -->
-    <div class="fixed top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-pinky/10 blur-[120px] pointer-events-none z-0 mix-blend-screen"></div>
-    <div class="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-purp/10 blur-[150px] pointer-events-none z-0 mix-blend-screen"></div>
+    <div class="fixed top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-[#ff6ec7]/10 blur-[120px] pointer-events-none z-0 mix-blend-screen"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#a855f7]/10 blur-[150px] pointer-events-none z-0 mix-blend-screen"></div>
 
     <!-- YouTube Music Embed (Hidden) -->
     <div id="player" class="hidden"></div>
 
     <!-- Music Toggle -->
-    <button id="music-toggle" class="fixed bottom-6 right-6 z-50 glass-panel p-3 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors group">
-        <iconify-icon icon="solar:music-notes-linear" class="text-xl text-white group-hover:text-pinky transition-colors"></iconify-icon>
+    <button id="music-toggle" class="fixed bottom-6 right-6 z-50 bg-white/[0.03] backdrop-blur-[12px] border border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.1)] p-3 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors group">
+        <iconify-icon icon="solar:music-notes-linear" class="text-xl text-white group-hover:text-[#ff6ec7] transition-colors"></iconify-icon>
     </button>
 
     <!-- Main Content Wrapper -->
@@ -126,48 +70,83 @@
 
         <!-- Hero Section -->
         <section class="min-h-screen flex flex-col items-center justify-center px-4 relative">
-            <div id="hero-content" class="glass-panel p-8 md:p-16 rounded-3xl max-w-3xl w-full text-center opacity-0 transform translate-y-10 transition-all duration-1000 ease-out animate-float">
-                <h1 class="font-cursive text-5xl md:text-7xl lg:text-8xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-pinky via-white to-purp text-glow mb-6 leading-tight pb-2">
-                    HEY BABE , Will You Love Me Forever? 💕
+            <div id="hero-content" class="bg-white/[0.03] backdrop-blur-[12px] border border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.1)] p-8 md:p-16 rounded-3xl max-w-3xl w-full text-center opacity-0 transform translate-y-10 transition-all duration-1000 ease-out" style="animation: float 6s ease-in-out infinite;">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#ff6ec7] via-white to-[#a855f7] mb-6 leading-tight pb-2" style="font-family: 'Great Vibes', cursive; text-shadow: 0 0 20px rgba(255,110,199,0.6), 0 0 40px rgba(168,85,247,0.4);">
+                    HEY BABE, Will You Love Me Forever? 💕
                 </h1>
                 
-                <p class="text-lg md:text-xl text-slate-300 font-light mb-12 tracking-wide animate-pulse-slow">
+                <p class="text-lg md:text-xl text-slate-300 font-light mb-12 tracking-tighter" style="animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;">
                     Every moment with you feels like magic ✨
                 </p>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-6 relative h-16">
-                    <button id="btn-yes" class="px-8 py-3 rounded-full bg-gradient-to-r from-pinky to-purp text-white font-medium tracking-wide shadow-[0_0_20px_rgba(255,110,199,0.4)] hover:shadow-[0_0_30px_rgba(255,110,199,0.6)] transition-all hover:scale-105 active:scale-95 flex items-center gap-2 relative z-20">
+                    <button id="btn-yes" class="px-8 py-3 rounded-full bg-gradient-to-r from-[#ff6ec7] to-[#a855f7] text-white font-normal tracking-tight shadow-[0_0_20px_rgba(255,110,199,0.4)] hover:shadow-[0_0_30px_rgba(255,110,199,0.6)] transition-all hover:scale-105 active:scale-95 flex items-center gap-2 relative z-20">
                         YES 💖
                     </button>
                     
                     <div id="btn-no-wrapper" class="relative z-20">
-                        <button id="btn-no" class="px-8 py-3 rounded-full glass-panel text-slate-200 font-medium tracking-wide hover:bg-white/10 transition-colors whitespace-nowrap absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center">
+                        <button id="btn-no" class="px-8 py-3 rounded-full bg-white/[0.03] backdrop-blur-[12px] border border-white/[0.08] text-slate-200 font-normal tracking-tight hover:bg-white/10 transition-colors whitespace-nowrap absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center">
                             NO 🙈
                         </button>
                     </div>
                 </div>
                 
-                <div id="no-msg" class="text-pinky text-sm mt-8 h-4 opacity-0 transition-opacity duration-300">
-                  HEY BABE , you can’t escape love 😜
+                <div id="no-msg" class="text-[#ff6ec7] text-sm mt-8 h-4 opacity-0 transition-opacity duration-300 tracking-tighter">
+                  HEY BABE, you can’t escape love 😜
                 </div>
             </div>
             
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce flex flex-col items-center opacity-50">
-                <span class="text-xs mb-2 tracking-widest uppercase">Scroll down my love</span>
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-50" style="animation: float 3s ease-in-out infinite;">
+                <span class="text-xs mb-2 tracking-tighter uppercase font-light">Scroll down my love</span>
                 <iconify-icon icon="solar:alt-arrow-down-linear" class="text-xl"></iconify-icon>
+            </div>
+        </section>
+
+        <!-- Interactive Dance & Bouquet Section -->
+        <section class="py-24 px-4 max-w-5xl mx-auto flex flex-col items-center select-none">
+            <h2 class="text-4xl md:text-5xl text-center mb-12 text-transparent bg-clip-text bg-gradient-to-r from-[#ff6ec7] to-[#a855f7] tracking-tighter" style="font-family: 'Great Vibes', cursive;">
+                A Dance to Remember 💃🕺
+            </h2>
+            
+            <p class="text-sm text-slate-400 font-light mb-8 tracking-tighter text-center max-w-md">
+                Press and hold to pull me close and reveal a surprise just for you.
+            </p>
+
+            <div class="relative w-full max-w-2xl aspect-[4/3] md:aspect-[16/9] bg-white/[0.03] backdrop-blur-[12px] border border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded-3xl overflow-hidden group cursor-pointer" id="dance-container">
+                
+                <!-- Dancing Couple Image -->
+                <img src="https://images.unsplash.com/photo-1516714435131-44d6b64dc6a2?auto=format&amp;fit=crop&amp;q=80&amp;w=1200" alt="Dancing Couple" class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-[3000ms] ease-out scale-100 group-hover:scale-105" id="dance-img" draggable="false">
+                
+                <!-- Overlay Warmth (The Hug) -->
+                <div class="absolute inset-0 bg-[#ff6ec7]/0 mix-blend-overlay transition-colors duration-1000 ease-in-out z-10" id="hug-overlay"></div>
+
+                <!-- Floating Bouquet (Hidden initially) -->
+                <img src="https://images.unsplash.com/photo-1589136777351-fdc9c9cb1563?auto=format&amp;fit=crop&amp;q=80&amp;w=600" alt="Bouquet of Roses" class="absolute bottom-[-60%] left-1/2 -translate-x-1/2 w-48 md:w-64 h-auto opacity-0 transition-all duration-[1500ms] ease-[cubic-bezier(0.34,1.56,0.64,1)] z-20 drop-shadow-[0_20px_30px_rgba(0,0,0,0.5)]" id="bouquet-img" draggable="false">
+
+                <!-- Hearts Container -->
+                <div class="absolute inset-0 overflow-hidden z-20 pointer-events-none" id="dance-hearts"></div>
+
+                <!-- Instruction Prompt -->
+                <div class="absolute inset-0 flex items-center justify-center z-30 pointer-events-none transition-opacity duration-500" id="dance-instruction">
+                    <div class="bg-white/[0.05] backdrop-blur-md border border-white/[0.1] px-6 py-3 rounded-full flex items-center gap-3 shadow-lg">
+                        <iconify-icon icon="solar:heart-angle-linear" class="text-xl text-[#ff6ec7]" style="animation: heartbeat 2s infinite;"></iconify-icon>
+                        <span class="text-xs tracking-tighter uppercase text-white font-light">Hold to Hug</span>
+                    </div>
+                </div>
+
             </div>
         </section>
 
         <!-- Love Letter Section -->
         <section class="min-h-screen flex items-center justify-center px-4 py-20">
             <div class="max-w-2xl w-full">
-                <div id="envelope" class="envelope-wrapper relative w-full aspect-[4/3] max-w-lg mx-auto cursor-pointer">
+                <div id="envelope" class="relative w-full aspect-[4/3] max-w-lg mx-auto cursor-pointer" style="perspective: 1000px;">
                     <!-- Back of envelope -->
                     <div class="absolute inset-0 bg-slate-800/50 backdrop-blur-md rounded-lg border border-white/10 z-0"></div>
                     
                     <!-- Paper inside -->
-                    <div class="letter-paper absolute left-4 right-4 top-4 bottom-4 glass-panel rounded bg-white/5 p-6 md:p-8 z-10 flex flex-col justify-start overflow-hidden">
-                        <p id="typewriter-text" class="font-sans text-sm md:text-base leading-relaxed text-slate-200 min-h-[200px]"></p>
+                    <div id="letter-paper" class="absolute left-4 right-4 top-4 bottom-4 bg-white/[0.03] backdrop-blur-[12px] border border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.1)] rounded p-6 md:p-8 z-10 flex flex-col justify-start overflow-hidden transition-transform duration-1000 ease-in-out">
+                        <p id="typewriter-text" class="text-sm md:text-base leading-relaxed text-slate-200 min-h-[200px] font-light"></p>
                     </div>
 
                     <!-- Envelope front layers -->
@@ -176,31 +155,31 @@
                     <div class="absolute inset-0 border-r-[200px] border-r-slate-800/90 border-t-[150px] border-t-transparent border-b-[150px] border-b-transparent z-20 pointer-events-none md:border-r-[250px] md:border-t-[200px] md:border-b-[200px]"></div>
                     
                     <!-- Flap -->
-                    <div class="envelope-flap absolute top-0 left-0 right-0 border-t-[120px] border-t-slate-700/90 border-l-[200px] border-l-transparent border-r-[200px] border-r-transparent z-30 drop-shadow-lg flex items-center justify-center md:border-t-[160px] md:border-l-[250px] md:border-r-[250px]">
-                        <div class="absolute -top-[60px] md:-top-[80px] w-10 h-10 bg-gradient-to-br from-pinky to-purp rounded-full shadow-lg flex items-center justify-center z-40">
+                    <div id="envelope-flap" class="absolute top-0 left-0 right-0 border-t-[120px] border-t-slate-700/90 border-l-[200px] border-l-transparent border-r-[200px] border-r-transparent z-30 drop-shadow-lg flex items-center justify-center md:border-t-[160px] md:border-l-[250px] md:border-r-[250px] transition-transform duration-1000 ease-in-out" style="transform-origin: top;">
+                        <div class="absolute -top-[60px] md:-top-[80px] w-10 h-10 bg-gradient-to-br from-[#ff6ec7] to-[#a855f7] rounded-full shadow-lg flex items-center justify-center z-40">
                             <iconify-icon icon="solar:heart-linear" class="text-white text-lg"></iconify-icon>
                         </div>
                     </div>
                 </div>
-                <p class="text-center mt-12 text-sm text-slate-400 font-light tracking-wide">Click the envelope to open</p>
+                <p class="text-center mt-12 text-sm text-slate-400 font-light tracking-tighter">Click the envelope to open</p>
             </div>
         </section>
 
         <!-- Memory Gallery -->
         <section class="py-24 px-4 max-w-6xl mx-auto">
-            <h2 class="font-cursive text-4xl md:text-5xl text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-bluey to-pinky tracking-tighter">
-                Memories With you ✨
+            <h2 class="text-4xl md:text-5xl text-center mb-16 text-transparent bg-clip-text bg-gradient-to-r from-[#60a5fa] to-[#ff6ec7] tracking-tighter" style="font-family: 'Great Vibes', cursive;">
+                Memories With You ✨
             </h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 perspective-1000">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12" style="perspective: 1000px;">
                 <!-- Polaroid 1 -->
                 <div class="polaroid group transform transition-all duration-500 hover:scale-105 hover:z-10 rotate-[-2deg]">
-                    <div class="glass-panel p-3 pb-12 rounded-sm shadow-2xl relative">
+                    <div class="bg-white/[0.03] backdrop-blur-[12px] border border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.1)] p-3 pb-12 rounded-sm relative">
                         <div class="aspect-[4/5] bg-slate-800 overflow-hidden rounded-sm relative">
                             <img src="https://images.unsplash.com/photo-1518199266791-5375a83164ba?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Memory" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 mix-blend-luminosity group-hover:mix-blend-normal">
-                            <div class="absolute inset-0 bg-gradient-to-t from-pinky/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#ff6ec7]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         </div>
-                        <p class="font-cursive text-xl absolute bottom-3 left-0 w-full text-center text-slate-300">Our first spark</p>
+                        <p class="text-xl absolute bottom-3 left-0 w-full text-center text-slate-300 tracking-tighter" style="font-family: 'Great Vibes', cursive;">Our first spark</p>
                         <!-- Tape -->
                         <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-white/20 backdrop-blur-sm rotate-[-3deg] shadow-sm"></div>
                     </div>
@@ -208,24 +187,24 @@
 
                 <!-- Polaroid 2 -->
                 <div class="polaroid group transform transition-all duration-500 hover:scale-105 hover:z-10 rotate-[3deg] md:-translate-y-8">
-                    <div class="glass-panel p-3 pb-12 rounded-sm shadow-2xl relative">
+                    <div class="bg-white/[0.03] backdrop-blur-[12px] border border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.1)] p-3 pb-12 rounded-sm relative">
                         <div class="aspect-[4/5] bg-slate-800 overflow-hidden rounded-sm relative">
                             <img src="https://images.unsplash.com/photo-1494774157365-9e04c6720e47?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Memory" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 mix-blend-luminosity group-hover:mix-blend-normal">
-                            <div class="absolute inset-0 bg-gradient-to-t from-purp/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#a855f7]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         </div>
-                        <p class="font-cursive text-xl absolute bottom-3 left-0 w-full text-center text-slate-300">Endless smiles</p>
+                        <p class="text-xl absolute bottom-3 left-0 w-full text-center text-slate-300 tracking-tighter" style="font-family: 'Great Vibes', cursive;">Endless smiles</p>
                         <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-white/20 backdrop-blur-sm rotate-[2deg] shadow-sm"></div>
                     </div>
                 </div>
 
                 <!-- Polaroid 3 -->
                 <div class="polaroid group transform transition-all duration-500 hover:scale-105 hover:z-10 rotate-[-1deg]">
-                    <div class="glass-panel p-3 pb-12 rounded-sm shadow-2xl relative">
+                    <div class="bg-white/[0.03] backdrop-blur-[12px] border border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.1)] p-3 pb-12 rounded-sm relative">
                         <div class="aspect-[4/5] bg-slate-800 overflow-hidden rounded-sm relative">
                             <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&amp;w=800&amp;auto=format&amp;fit=crop" alt="Memory" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 mix-blend-luminosity group-hover:mix-blend-normal">
-                            <div class="absolute inset-0 bg-gradient-to-t from-bluey/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#60a5fa]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         </div>
-                        <p class="font-cursive text-xl absolute bottom-3 left-0 w-full text-center text-slate-300">Perfect together</p>
+                        <p class="text-xl absolute bottom-3 left-0 w-full text-center text-slate-300 tracking-tighter" style="font-family: 'Great Vibes', cursive;">Perfect together</p>
                         <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-white/20 backdrop-blur-sm rotate-[-1deg] shadow-sm"></div>
                     </div>
                 </div>
@@ -234,31 +213,31 @@
 
         <!-- Love Counter -->
         <section class="py-20 px-4">
-            <div class="glass-panel max-w-4xl mx-auto rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-pinky/20 blur-3xl rounded-full"></div>
-                <div class="absolute bottom-0 left-0 w-32 h-32 bg-bluey/20 blur-3xl rounded-full"></div>
+            <div class="bg-white/[0.03] backdrop-blur-[12px] border border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.1)] max-w-4xl mx-auto rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-[#ff6ec7]/20 blur-3xl rounded-full"></div>
+                <div class="absolute bottom-0 left-0 w-32 h-32 bg-[#60a5fa]/20 blur-3xl rounded-full"></div>
                 
-                <h3 class="font-sans text-sm md:text-base text-slate-400 mb-8 uppercase tracking-widest font-medium">My love for Kritika has been growing for:</h3>
+                <h3 class="text-sm md:text-base text-slate-400 mb-8 uppercase tracking-tighter font-light">My love for BABE has been growing for:</h3>
                 
                 <div class="flex flex-wrap justify-center gap-4 md:gap-8 relative z-10">
                     <div class="flex flex-col items-center">
-                        <div id="count-days" class="text-4xl md:text-6xl font-sans font-light text-white mb-2 text-glow">00</div>
-                        <span class="text-xs text-slate-500 uppercase tracking-widest">Days</span>
+                        <div id="count-days" class="text-4xl md:text-6xl font-light text-white mb-2" style="text-shadow: 0 0 20px rgba(255,110,199,0.6);">00</div>
+                        <span class="text-xs text-slate-500 uppercase tracking-tighter">Days</span>
                     </div>
                     <div class="text-4xl md:text-6xl font-light text-slate-700">:</div>
                     <div class="flex flex-col items-center">
-                        <div id="count-hours" class="text-4xl md:text-6xl font-sans font-light text-white mb-2 text-glow">00</div>
-                        <span class="text-xs text-slate-500 uppercase tracking-widest">Hours</span>
+                        <div id="count-hours" class="text-4xl md:text-6xl font-light text-white mb-2" style="text-shadow: 0 0 20px rgba(255,110,199,0.6);">00</div>
+                        <span class="text-xs text-slate-500 uppercase tracking-tighter">Hours</span>
                     </div>
                     <div class="text-4xl md:text-6xl font-light text-slate-700">:</div>
                     <div class="flex flex-col items-center">
-                        <div id="count-mins" class="text-4xl md:text-6xl font-sans font-light text-white mb-2 text-glow">00</div>
-                        <span class="text-xs text-slate-500 uppercase tracking-widest">Minutes</span>
+                        <div id="count-mins" class="text-4xl md:text-6xl font-light text-white mb-2" style="text-shadow: 0 0 20px rgba(255,110,199,0.6);">00</div>
+                        <span class="text-xs text-slate-500 uppercase tracking-tighter">Minutes</span>
                     </div>
                     <div class="text-4xl md:text-6xl font-light text-slate-700 hidden md:block">:</div>
                     <div class="flex flex-col items-center w-full md:w-auto mt-4 md:mt-0">
-                        <div id="count-secs" class="text-4xl md:text-6xl font-sans font-light text-pinky mb-2 text-glow">00</div>
-                        <span class="text-xs text-slate-500 uppercase tracking-widest">Seconds</span>
+                        <div id="count-secs" class="text-4xl md:text-6xl font-light text-[#ff6ec7] mb-2" style="text-shadow: 0 0 20px rgba(255,110,199,0.6);">00</div>
+                        <span class="text-xs text-slate-500 uppercase tracking-tighter">Seconds</span>
                     </div>
                 </div>
             </div>
@@ -268,18 +247,18 @@
         <section class="min-h-screen flex flex-col items-center justify-center px-4 relative overflow-hidden" id="final-section">
             <div id="petals-container"></div>
             
-            <div class="text-center z-10 max-w-3xl glass-panel p-10 md:p-20 rounded-[40px] relative">
-                <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-pinky text-6xl opacity-50" style="animation: heartbeat 1.5s infinite;">
+            <div class="text-center z-10 max-w-3xl bg-white/[0.03] backdrop-blur-[12px] border border-white/[0.08] shadow-[0_4px_30px_rgba(0,0,0,0.1)] p-10 md:p-20 rounded-[40px] relative">
+                <div class="absolute -top-12 left-1/2 -translate-x-1/2 text-[#ff6ec7] text-6xl opacity-50" style="animation: heartbeat 1.5s infinite;">
                     <iconify-icon icon="solar:heart-bold"></iconify-icon>
                 </div>
                 
-                <h2 class="font-cursive text-5xl md:text-7xl lg:text-8xl tracking-tighter text-white text-glow mb-12">
+                <h2 class="text-5xl md:text-7xl lg:text-8xl tracking-tighter text-white mb-12" style="font-family: 'Great Vibes', cursive; text-shadow: 0 0 20px rgba(255,110,199,0.6), 0 0 40px rgba(168,85,247,0.4);">
                    BABE, will you be mine forever?
                 </h2>
                 
-                <button id="btn-final-yes" class="group relative px-10 py-5 rounded-full bg-white/5 border border-pinky/30 overflow-hidden hover:bg-pinky/10 transition-all duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-r from-pinky/50 to-purp/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
-                    <span class="relative z-10 text-white font-sans font-medium text-lg tracking-widest flex items-center gap-3">
+                <button id="btn-final-yes" class="group relative px-10 py-5 rounded-full bg-white/5 border border-[#ff6ec7]/30 overflow-hidden hover:bg-[#ff6ec7]/10 transition-all duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[#ff6ec7]/50 to-[#a855f7]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                    <span class="relative z-10 text-white font-normal text-lg tracking-tighter flex items-center gap-3">
                         YES, FOREVER 💍
                         <iconify-icon icon="solar:stars-linear" class="text-xl group-hover:rotate-180 transition-transform duration-700"></iconify-icon>
                     </span>
@@ -292,11 +271,11 @@
     <!-- Success Popup Overlay -->
     <div id="success-popup" class="fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-xl flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-700">
         <div class="text-center transform scale-90 transition-transform duration-700" id="popup-content">
-            <div class="text-pinky text-8xl mb-6" style="animation: heartbeat 1s infinite;">❤️</div>
-            <h2 id="success-msg" class="font-cursive text-5xl md:text-7xl text-white text-glow mb-4 tracking-tighter">
+            <div class="text-[#ff6ec7] text-8xl mb-6" style="animation: heartbeat 1s infinite;">❤️</div>
+            <h2 id="success-msg" class="text-5xl md:text-7xl text-white mb-4 tracking-tighter" style="font-family: 'Great Vibes', cursive; text-shadow: 0 0 20px rgba(255,110,199,0.6);">
                 I knew it babe!
             </h2>
-            <p class="text-xl text-slate-300 font-light tracking-wide">You make my world beautiful.</p>
+            <p class="text-xl text-slate-300 font-light tracking-tighter">You make my world beautiful.</p>
         </div>
     </div>
 
@@ -305,7 +284,6 @@
         // --- 1. Three.js Background Animation ---
         const canvas = document.getElementById('bg-canvas');
         const scene = new THREE.Scene();
-        // Add soft fog
         scene.fog = new THREE.FogExp2(0x020617, 0.002);
 
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -313,7 +291,6 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Particles (Stars)
         const particlesGeometry = new THREE.BufferGeometry();
         const particlesCount = 1500;
         const posArray = new Float32Array(particlesCount * 3);
@@ -333,19 +310,17 @@
         const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
         scene.add(particlesMesh);
 
-        // 3D Hearts
         const hearts = [];
         const heartMaterial = new THREE.MeshPhysicalMaterial({ 
             color: 0xff6ec7,
             metalness: 0.1,
             roughness: 0.2,
-            transmission: 0.9, // glass-like
+            transmission: 0.9,
             thickness: 0.5,
             emissive: 0xff6ec7,
             emissiveIntensity: 0.2
         });
 
-        // Create heart shape
         const x = 0, y = 0;
         const heartShape = new THREE.Shape();
         heartShape.moveTo( x + 2.5, y + 2.5 );
@@ -366,7 +341,6 @@
             mesh.position.set((Math.random() - 0.5) * 40, (Math.random() - 0.5) * 40, (Math.random() - 0.5) * 20 - 10);
             mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
             
-            // Custom properties for animation
             mesh.userData = {
                 rotSpeed: (Math.random() - 0.5) * 0.02,
                 floatSpeed: Math.random() * 0.02 + 0.01,
@@ -377,7 +351,6 @@
             hearts.push(mesh);
         }
 
-        // Lights
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
         const pointLight = new THREE.PointLight(0xa855f7, 2, 50);
@@ -386,7 +359,6 @@
 
         camera.position.z = 15;
 
-        // Mouse Parallax
         let mouseX = 0;
         let mouseY = 0;
         let targetX = 0;
@@ -399,7 +371,6 @@
             mouseY = (event.clientY - windowHalfY);
         });
 
-        // Shooting Star
         let shootingStar;
         const createShootingStar = () => {
             if(shootingStar) scene.remove(shootingStar);
@@ -413,7 +384,6 @@
             shootingStar = new THREE.Line(geo, mat);
             scene.add(shootingStar);
             
-            // Animate it
             let progress = 0;
             const animateStar = () => {
                 progress += 0.05;
@@ -433,7 +403,6 @@
         };
         setInterval(createShootingStar, 10000);
 
-        // Animation Loop
         const clock = new THREE.Clock();
         const animate = () => {
             requestAnimationFrame(animate);
@@ -465,8 +434,6 @@
         });
 
         // --- 2. UI Interactions ---
-
-        // Hero Load Animation
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const hero = document.getElementById('hero-content');
@@ -475,14 +442,12 @@
         });
 
         // NO Button Logic
-        const btnNoWrapper = document.getElementById('btn-no-wrapper');
         const btnNo = document.getElementById('btn-no');
         const noMsg = document.getElementById('no-msg');
         let noTries = 0;
 
         btnNo.addEventListener('mouseover', () => {
             if (noTries < 5) {
-                // Change to fixed positioning relative to viewport to run away freely
                 const padding = 50;
                 const maxX = window.innerWidth - btnNo.offsetWidth - padding;
                 const maxY = window.innerHeight - btnNo.offsetHeight - padding;
@@ -493,7 +458,7 @@
                 btnNo.style.position = 'fixed';
                 btnNo.style.left = `${randomX}px`;
                 btnNo.style.top = `${randomY}px`;
-                btnNo.style.transform = `none`; // remove initial translate
+                btnNo.style.transform = `none`;
                 
                 noTries++;
             } else {
@@ -507,32 +472,15 @@
             const end = Date.now() + duration;
 
             (function frame() {
-                confetti({
-                    particleCount: 5,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    colors: ['#ff6ec7', '#a855f7', '#ffffff']
-                });
-                confetti({
-                    particleCount: 5,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    colors: ['#ff6ec7', '#a855f7', '#ffffff']
-                });
-
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff6ec7', '#a855f7', '#ffffff'] });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff6ec7', '#a855f7', '#ffffff'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
             }());
 
             const popup = document.getElementById('success-popup');
             const popupContent = document.getElementById('popup-content');
             
-            if(final) {
-                document.getElementById('success-msg').innerHTML = "Forever starts now, babe ❤️";
-            }
+            if(final) document.getElementById('success-msg').innerHTML = "Forever starts now, babe ❤️";
 
             popup.classList.remove('opacity-0', 'pointer-events-none');
             setTimeout(() => {
@@ -540,7 +488,6 @@
                 popupContent.classList.add('scale-100');
             }, 100);
             
-            // Play music if not already playing
             if(player && typeof player.playVideo === 'function') {
                 player.unMute();
                 player.playVideo();
@@ -550,21 +497,16 @@
 
         document.getElementById('btn-yes').addEventListener('click', () => triggerSuccess(false));
         document.getElementById('final-section').addEventListener('mousemove', (e) => {
-            // Heartbeat effect based on cursor
             const btn = document.getElementById('btn-final-yes');
             const rect = btn.getBoundingClientRect();
             const x = e.clientX - rect.left - rect.width/2;
             const y = e.clientY - rect.top - rect.height/2;
             const dist = Math.sqrt(x*x + y*y);
-            if(dist < 200) {
-                btn.style.transform = `scale(${1 + (200-dist)/2000})`;
-            } else {
-                btn.style.transform = 'scale(1)';
-            }
+            if(dist < 200) btn.style.transform = `scale(${1 + (200-dist)/2000})`;
+            else btn.style.transform = 'scale(1)';
         });
         document.getElementById('btn-final-yes').addEventListener('click', () => triggerSuccess(true));
         
-        // Close popup on click
         document.getElementById('success-popup').addEventListener('click', function(e) {
             if(e.target === this) {
                 this.classList.add('opacity-0', 'pointer-events-none');
@@ -573,18 +515,71 @@
             }
         });
 
+        // Interactive Dance & Bouquet Logic
+        const danceContainer = document.getElementById('dance-container');
+        const bouquetImg = document.getElementById('bouquet-img');
+        const hugOverlay = document.getElementById('hug-overlay');
+        const danceInstruction = document.getElementById('dance-instruction');
+        const danceHearts = document.getElementById('dance-hearts');
+        let hugTimer;
+        let heartInterval;
+        let isHugged = false;
+
+        const startHug = () => {
+            if(isHugged) return;
+            danceInstruction.classList.add('opacity-0');
+            hugOverlay.classList.remove('bg-[#ff6ec7]/0');
+            hugOverlay.classList.add('bg-[#ff6ec7]/40');
+            bouquetImg.classList.remove('bottom-[-60%]', 'opacity-0');
+            bouquetImg.classList.add('bottom-0', 'opacity-100');
+            
+            heartInterval = setInterval(() => {
+                const heart = document.createElement('div');
+                heart.innerHTML = '<iconify-icon icon="solar:heart-bold"></iconify-icon>';
+                heart.className = 'absolute text-[#ff6ec7] text-3xl pointer-events-none drop-shadow-[0_0_10px_rgba(255,110,199,0.8)]';
+                heart.style.left = `${Math.random() * 80 + 10}%`;
+                heart.style.bottom = '10%';
+                heart.style.animation = `float ${Math.random() * 2 + 3}s ease-in forwards`;
+                danceHearts.appendChild(heart);
+                setTimeout(() => heart.remove(), 4000);
+            }, 300);
+
+            hugTimer = setTimeout(() => { isHugged = true; }, 3000);
+        };
+
+        const endHug = () => {
+            if(isHugged) return;
+            clearInterval(heartInterval);
+            clearTimeout(hugTimer);
+            danceInstruction.classList.remove('opacity-0');
+            hugOverlay.classList.remove('bg-[#ff6ec7]/40');
+            hugOverlay.classList.add('bg-[#ff6ec7]/0');
+            bouquetImg.classList.remove('bottom-0', 'opacity-100');
+            bouquetImg.classList.add('bottom-[-60%]', 'opacity-0');
+        };
+
+        danceContainer.addEventListener('mousedown', startHug);
+        danceContainer.addEventListener('mouseup', endHug);
+        danceContainer.addEventListener('mouseleave', endHug);
+        danceContainer.addEventListener('touchstart', (e) => { e.preventDefault(); startHug(); });
+        danceContainer.addEventListener('touchend', endHug);
+
         // Love Letter Envelope
         const envelope = document.getElementById('envelope');
         const typewriterText = document.getElementById('typewriter-text');
-        const letterContent = `Dear Kritika,\n\nFrom the moment I met you,\nmy life became brighter,\nmy days became happier,\nand my heart became yours.\n\nThis little website is just a small piece\nof how big my love is for you ❤️`;
+        const envelopeFlap = document.getElementById('envelope-flap');
+        const letterPaper = document.getElementById('letter-paper');
+        const letterContent = `Dear Babe,\n\nFrom the moment I met you,\nmy life became brighter,\nmy days became happier,\nand my heart became yours.\n\nThis little website is just a small piece\nof how big my love is for you ❤️`;
         let isOpened = false;
 
         envelope.addEventListener('click', () => {
             if(isOpened) return;
-            envelope.classList.add('open');
             isOpened = true;
+            envelopeFlap.style.transform = 'rotateX(180deg)';
+            envelopeFlap.style.zIndex = '0';
             
             setTimeout(() => {
+                letterPaper.style.transform = 'translateY(-80px)';
                 let i = 0;
                 typewriterText.innerHTML = '';
                 const typeWriter = setInterval(() => {
@@ -595,7 +590,7 @@
                         clearInterval(typeWriter);
                     }
                 }, 50);
-            }, 1500); // Wait for open animation
+            }, 1000);
         });
 
         // 3D Tilt for Polaroids
@@ -610,20 +605,17 @@
                 const rotateX = ((y - centerY) / centerY) * -10;
                 const rotateY = ((x - centerX) / centerX) * 10;
                 
-                // Keep base rotation
                 const baseRot = p.style.transform.match(/rotate\((.*?)\)/);
                 const rot = baseRot ? baseRot[0] : '';
                 
                 p.style.transform = `${rot} perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
             });
-            p.addEventListener('mouseleave', () => {
-                p.style.transform = ''; // reverts to css class transform
-            });
+            p.addEventListener('mouseleave', () => { p.style.transform = ''; });
         });
 
-        // Love Counter Logic (Set to a past date, e.g., 1 year ago)
+        // Love Counter Logic
         const startDate = new Date();
-        startDate.setFullYear(startDate.getFullYear() - 1); // 1 year ago for demo
+        startDate.setFullYear(startDate.getFullYear() - 1); // 1 year ago
 
         const updateCounter = () => {
             const now = new Date();
@@ -642,19 +634,16 @@
         setInterval(updateCounter, 1000);
         updateCounter();
 
-        // Falling Rose Petals in Final Section
+        // Falling Rose Petals
         const createPetal = () => {
             const petal = document.createElement('div');
             petal.innerHTML = '❀';
-            petal.classList.add('petal');
+            petal.className = 'fixed top-[-10%] z-40 pointer-events-none text-[#ff6ec7] drop-shadow-[0_0_10px_rgba(255,110,199,0.5)]';
             petal.style.left = `${Math.random() * 100}vw`;
-            petal.style.fontSize = `${Math.random() * 10 + 10}px`;
-            petal.style.animationDuration = `${Math.random() * 5 + 5}s`;
+            petal.style.fontSize = `${Math.random() * 0.5 + 0.8}rem`;
+            petal.style.animation = `fall ${Math.random() * 5 + 5}s linear infinite`;
             document.getElementById('petals-container').appendChild(petal);
-            
-            setTimeout(() => {
-                petal.remove();
-            }, 10000);
+            setTimeout(() => petal.remove(), 10000);
         };
         setInterval(createPetal, 300);
 
@@ -662,7 +651,6 @@
         let player;
         let isMusicPlaying = false;
         
-        // Load YouTube API
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         const firstScriptTag = document.getElementsByTagName('script')[0];
@@ -670,28 +658,15 @@
 
         window.onYouTubeIframeAPIReady = function() {
             player = new YT.Player('player', {
-                height: '0',
-                width: '0',
-                videoId: 'SOJpE1KMUbo',
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0,
-                    'showinfo': 0,
-                    'modestbranding': 1,
-                    'loop': 1,
-                    'playlist': 'SOJpE1KMUbo' // required for loop
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
+                height: '0', width: '0', videoId: 'SOJpE1KMUbo',
+                playerVars: { 'autoplay': 1, 'controls': 0, 'showinfo': 0, 'modestbranding': 1, 'loop': 1, 'playlist': 'SOJpE1KMUbo' },
+                events: { 'onReady': onPlayerReady }
             });
         };
 
         function onPlayerReady(event) {
             event.target.mute();
             event.target.playVideo();
-            
-            // Fade in volume after 3 seconds
             setTimeout(() => {
                 event.target.unMute();
                 let vol = 0;
@@ -699,7 +674,7 @@
                 const fade = setInterval(() => {
                     vol += 5;
                     event.target.setVolume(vol);
-                    if(vol >= 50) { // Set max volume to 50% for soft bg music
+                    if(vol >= 50) {
                         clearInterval(fade);
                         isMusicPlaying = true;
                         updateMusicIcon();
@@ -713,10 +688,10 @@
             const icon = musicToggleBtn.querySelector('iconify-icon');
             if(isMusicPlaying) {
                 icon.setAttribute('icon', 'solar:music-notes-bold');
-                icon.classList.add('text-pinky');
+                icon.classList.add('text-[#ff6ec7]');
             } else {
                 icon.setAttribute('icon', 'solar:music-notes-linear');
-                icon.classList.remove('text-pinky');
+                icon.classList.remove('text-[#ff6ec7]');
             }
         };
 
@@ -733,7 +708,6 @@
             updateMusicIcon();
         });
 
-        // Fallback user interaction to start audio due to strict browser policies
         document.body.addEventListener('click', () => {
             if(player && !isMusicPlaying && player.getPlayerState() !== 1) {
                 player.unMute();
@@ -745,4 +719,4 @@
 
     </script>
 
-</body></html> 
+</body></html>
